@@ -14,7 +14,6 @@ import static org.junit.Assert.assertNotNull;
 @RunWith(MockitoJUnitRunner.class)
 public class RepliconAPITest extends TestCase {
 
-
     RepliconAPI _target;
 
     @Mock
@@ -28,9 +27,14 @@ public class RepliconAPITest extends TestCase {
         Employee employeeTwo = getEmployee("EmployeeTwo");
         ImmutableList<Employee> employeesFixture = ImmutableList.of(employeeOne, employeeTwo);
 
-        doReturn(employeesFixture).when(_repliconClient).getModelsFrom(Employee.class, "employees");
+        Class<Employee> employeeClass = Employee.class;
+        String employeesPath = "employees";
+
+        doReturn(employeesFixture).when(_repliconClient).getModelsFrom(employeeClass, employeesPath);
 
         ImmutableList<Employee> result = _target.getEmployees();
+
+        verify(_repliconClient).getModelsFrom(employeeClass, employeesPath);
 
         assertNotNull(result);
         assertEquals(employeeOne, result.get(0));
